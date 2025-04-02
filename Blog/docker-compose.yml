@@ -1,0 +1,20 @@
+version: '3'
+services:
+  eureka-server:
+    build:
+      context: ./eureka
+    ports:
+      - "8761:8761"
+    networks:
+      - my_network
+  blog-app:
+    build:
+      context: ./blog
+    ports:
+      - "8081:8081"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
