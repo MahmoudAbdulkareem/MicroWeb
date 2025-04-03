@@ -3,23 +3,21 @@
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Service;
     import org.springframework.transaction.annotation.Transactional;
+    import org.springframework.web.bind.annotation.CrossOrigin;
 
     import java.util.List;
     import java.util.Optional;
 
     @Service
+    @CrossOrigin(origins = "http://localhost:4200") // Allow requests from Angular frontend
+
     public class BlogService {
 
         @Autowired
         private BlogRepository blogRepository;
 
         public Blog addBlog(Blog blog) {
-            if (blog.getId() != null && blogRepository.existsById(blog.getId())) {
-                throw new BlogAlreadyExistsException("Blog with ID " + blog.getId() + " already exists.");
-            }
-            if (blog.getId() == null) {
-                throw new IllegalArgumentException("Blog ID must not be null");
-            }
+
             return blogRepository.save(blog);
         }
 
