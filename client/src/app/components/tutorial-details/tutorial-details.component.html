@@ -1,0 +1,85 @@
+<div *ngIf="viewMode; else editable">
+  <div *ngIf="currentTutorial.id">
+    <h4>Tutorial</h4>
+    <div>
+      <label><strong>Title:</strong></label> {{ currentTutorial.title }}
+    </div>
+    <div>
+      <label><strong>Description:</strong></label>
+      {{ currentTutorial.content }}
+    </div>
+    <div>
+      <label><strong>Author</strong></label>
+      {{ currentTutorial.author }}
+    </div>
+
+    <a class="badge badge-warning"
+      routerLink="/tutorials/{{ currentTutorial.id }}">
+      Edit
+    </a>
+  </div>
+
+  <div *ngIf="!currentTutorial">
+    <br />
+    <p>Please click on a Blog...</p>
+  </div>
+</div>
+
+<ng-template #editable>
+  <div *ngIf="currentTutorial.id" class="edit-form">
+    <h4>Blog</h4>
+    <form>
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          [(ngModel)]="currentTutorial.title"
+          name="title"
+        />
+      </div>
+      <div class="form-group">
+        <label for="content">Description</label>
+        <input
+          type="text"
+          class="form-control"
+          id="content"
+          [(ngModel)]="currentTutorial.content"
+          name="content"
+        />
+      </div>
+
+      <div class="form-group">
+        <label><strong>Author :</strong></label>
+        {{ currentTutorial.author }}
+      </div>
+    </form>
+
+    <button
+      *ngIf="!currentTutorial.author"
+      class="badge badge-primary mr-2"
+      (click)="updatePublished(true)"
+    >
+      Publish
+    </button>
+
+    <button class="badge badge-danger mr-2" (click)="deleteTutorial()">
+      Delete
+    </button>
+
+    <button
+      type="submit"
+      class="badge badge-success mb-2"
+      (click)="updateTutorial()"
+    >
+      Update
+    </button>
+    <p>{{ message }}</p>
+  </div>
+
+  <div *ngIf="!currentTutorial.id">
+    <br />
+    <p>Cannot access this Blog...</p>
+  </div>
+</ng-template>
