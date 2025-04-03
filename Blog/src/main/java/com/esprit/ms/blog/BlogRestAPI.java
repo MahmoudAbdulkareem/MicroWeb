@@ -18,9 +18,9 @@ public class BlogRestAPI {
     public ResponseEntity<Blog> addBlog(@RequestBody Blog blog) {
         try {
             Blog createdBlog = blogService.addBlog(blog);
-            return ResponseEntity.ok(createdBlog);  // Return created blog in the response body
+            return ResponseEntity.ok(createdBlog);
         } catch (BlogAlreadyExistsException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);  // 409 Conflict
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
 
@@ -38,6 +38,26 @@ public class BlogRestAPI {
         List<Blog> blogs = blogService.getAllBlogs();
         if (blogs.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(blogs);  // 204 No Content
+        }
+        return ResponseEntity.ok(blogs);
+    }
+
+    // Get blogs by category (using the Category enum)
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<Blog>> getBlogsByCategory(@PathVariable Category category) {
+        List<Blog> blogs = blogService.getBlogsByCategory(category);
+        if (blogs.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(blogs);
+        }
+        return ResponseEntity.ok(blogs);
+    }
+
+    // Search blogs by title
+    @GetMapping("/search")
+    public ResponseEntity<List<Blog>> searchBlogs(@RequestParam String keyword) {
+        List<Blog> blogs = blogService.searchBlogs(keyword);
+        if (blogs.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(blogs);
         }
         return ResponseEntity.ok(blogs);
     }

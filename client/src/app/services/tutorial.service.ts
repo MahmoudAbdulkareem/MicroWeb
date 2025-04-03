@@ -45,4 +45,14 @@ export class TutorialService {
   findByTitle(title: any): Observable<Tutorial[]> {
     return this.http.get<Tutorial[]>(`${baseUrl}?title=${title}`);
   }
+  
+
+  findByCategory(category: string): Observable<Tutorial[]> {
+    return this.http.get<Tutorial[]>(`${baseUrl}/category/${category}`);
+  }
+
+  // Advanced search with keyword
+  searchBlogs(keyword: string): Observable<Tutorial[]> {
+    return this.http.get<Tutorial[]>(`${baseUrl}/search?keyword=${keyword}`);
+  }
 }

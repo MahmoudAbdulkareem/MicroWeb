@@ -56,4 +56,14 @@
             blogRepository.deleteById(id);
             return "Blog deleted";
         }
+
+        public List<Blog> getBlogsByCategory(Category category) {
+            return blogRepository.findByCategory(category);
+        }
+
+        // Method to get blogs by title (for advanced search by title)
+        public List<Blog> searchBlogs(String keyword) {
+            return blogRepository.findByTitleContainingIgnoreCase(keyword);
+        }
+
     }

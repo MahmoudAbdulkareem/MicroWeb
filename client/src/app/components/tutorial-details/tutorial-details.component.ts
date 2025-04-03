@@ -10,12 +10,14 @@ import { Tutorial } from 'src/app/models/tutorial.model';
 })
 export class TutorialDetailsComponent implements OnInit {
   @Input() viewMode = false;
-
   @Input() currentTutorial: Tutorial = {
     title: '',
     content: '',
-    author: ''
+    author: '',
+    category: ''
   };
+
+  categories: string[] = ['FOOD', 'HEALTH', 'TECHNOLOGY', 'ENTERTAINMENT', 'LIFESTYLE'];
 
   message = '';
 
@@ -42,45 +44,18 @@ export class TutorialDetailsComponent implements OnInit {
     });
   }
 
-  updatePublished(status: boolean): void {
-    const data = {
-      title: this.currentTutorial.title,
-      description: this.currentTutorial.content,
-      author: this.currentTutorial.author,
-    };
-
+  updateTutorial(): void {
     this.message = '';
-
-    this.tutorialService.update(this.currentTutorial.id, data).subscribe({
+    this.tutorialService.update(this.currentTutorial.id, this.currentTutorial).subscribe({
       next: (res) => {
         console.log(res);
-        this.currentTutorial.author,
-        this.message = res.message
-          ? res.message
-          : 'The status was updated successfully!';
+        this.message = res.message ? res.message : 'This Blog was updated successfully!';
       },
       error: (e) => console.error(e)
     });
   }
 
-  updateTutorial(): void {
-    this.message = '';
-
-    this.tutorialService
-      .update(this.currentTutorial.id, this.currentTutorial)
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          this.message = res.message
-            ? res.message
-            : 'This Blog was updated successfully!';
-        },
-        error: (e) => console.error(e)
-      });
-  }
-
   deleteTutorial(): void {
-    console.log('Deleting Blog with ID:', this.currentTutorial.id); // Log the ID
     if (this.currentTutorial.id) {
       this.tutorialService.delete(this.currentTutorial.id).subscribe({
         next: (res) => {
@@ -96,5 +71,4 @@ export class TutorialDetailsComponent implements OnInit {
       alert('Blog ID is missing');
     }
   }
-
 }

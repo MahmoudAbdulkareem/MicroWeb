@@ -1,23 +1,5 @@
 <div *ngIf="viewMode; else editable">
-  <div *ngIf="currentTutorial.id">
-    <h4>Tutorial</h4>
-    <div>
-      <label><strong>Title:</strong></label> {{ currentTutorial.title }}
-    </div>
-    <div>
-      <label><strong>Description:</strong></label>
-      {{ currentTutorial.content }}
-    </div>
-    <div>
-      <label><strong>Author</strong></label>
-      {{ currentTutorial.author }}
-    </div>
 
-    <a class="badge badge-warning"
-      routerLink="/tutorials/{{ currentTutorial.id }}">
-      Edit
-    </a>
-  </div>
 
   <div *ngIf="!currentTutorial">
     <br />
@@ -30,51 +12,33 @@
     <h4>Blog</h4>
     <form>
       <div class="form-group">
-        <label for="title">Title</label>
-        <input
-          type="text"
-          class="form-control"
-          id="title"
-          [(ngModel)]="currentTutorial.title"
-          name="title"
-        />
+        <label><strong>Title</strong></label>
+        <input type="text" class="form-control" id="title"
+          [(ngModel)]="currentTutorial.title" name="title" />
       </div>
       <div class="form-group">
-        <label for="content">Description</label>
-        <input
-          type="text"
-          class="form-control"
-          id="content"
-          [(ngModel)]="currentTutorial.content"
-          name="content"
-        />
+        <label><strong>Description</strong></label>
+        <input type="text" class="form-control" id="content"
+          [(ngModel)]="currentTutorial.content" name="content" />
+      </div>
+      <div class="form-group">
+        <label><strong>Author</strong></label>
+        <input type="text" class="form-control" id="author"
+        [(ngModel)]="currentTutorial.author" name="author" />
       </div>
 
       <div class="form-group">
-        <label><strong>Author :</strong></label>
-        {{ currentTutorial.author }}
+        <label><strong>Category</strong></label>
+        <select class="form-control" id="category" [(ngModel)]="currentTutorial.category" name="category">
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
       </div>
     </form>
 
-    <button
-      *ngIf="!currentTutorial.author"
-      class="badge badge-primary mr-2"
-      (click)="updatePublished(true)"
-    >
-      Publish
-    </button>
+    <button class="badge badge-danger mr-2" (click)="deleteTutorial()">Delete</button>
 
-    <button class="badge badge-danger mr-2" (click)="deleteTutorial()">
-      Delete
-    </button>
+    <button type="submit" class="badge badge-success mb-2" (click)="updateTutorial()">Update</button>
 
-    <button
-      type="submit"
-      class="badge badge-success mb-2"
-      (click)="updateTutorial()"
-    >
-      Update
-    </button>
     <p>{{ message }}</p>
   </div>
 

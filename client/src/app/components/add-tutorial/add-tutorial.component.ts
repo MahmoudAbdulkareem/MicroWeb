@@ -11,9 +11,12 @@ export class AddTutorialComponent {
   tutorial: Tutorial = {
     title: '',
     content: '',
-    author: ''
+    author: '',
+    category: ''
   };
   submitted = false;
+
+  categories: string[] = ['FOOD', 'HEALTH', 'TECHNOLOGY', 'ENTERTAINMENT', 'LIFESTYLE'];
 
   constructor(private tutorialService: TutorialService) {}
 
@@ -21,7 +24,8 @@ export class AddTutorialComponent {
     const data = {
       title: this.tutorial.title,
       content: this.tutorial.content,
-      author: this.tutorial.author
+      author: this.tutorial.author,
+      category: this.tutorial.category
     };
 
     this.tutorialService.create(data).subscribe({
@@ -38,7 +42,8 @@ export class AddTutorialComponent {
     this.tutorial = {
       title: '',
       content: '',
-      author: ''
+      author: '',
+      category: ''
     };
   }
 }

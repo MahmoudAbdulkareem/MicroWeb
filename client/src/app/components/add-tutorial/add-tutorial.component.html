@@ -35,6 +35,19 @@
         />
       </div>
 
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select
+          class="form-control"
+          id="category"
+          required
+          [(ngModel)]="tutorial.category"
+          name="category"
+        >
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+
       <button (click)="saveTutorial()" class="btn btn-success">Submit</button>
     </div>
 
