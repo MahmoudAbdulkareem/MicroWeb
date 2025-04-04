@@ -12,7 +12,8 @@ public class Blog {
 
 	private String title;
 	private String content;
-	private String author;
+	private String author; // Display name
+	private Long authorId; // ID of the author in UserService
 
 	@Enumerated(EnumType.STRING) // Ensure category is stored as a string in the DB
 	private Category category;
@@ -22,11 +23,12 @@ public class Blog {
 
 	public Blog() {}
 
-	public Blog(String title, String content, String author, Category category) {
+	public Blog(String title, String content, String author, Category category, Long authorId) {
 		this.title = title;
 		this.content = content;
 		this.author = author;
 		this.category = category;
+		this.authorId = authorId;
 	}
 
 	// Getters and Setters
@@ -41,4 +43,6 @@ public class Blog {
 	public Category getCategory() { return category; }
 	public void setCategory(Category category) { this.category = category; }
 	public Date getCreatedAt() { return createdAt; }
+	public Long getAuthorId() { return authorId; }
+	public void setAuthorId(Long authorId) { this.authorId = authorId; }
 }

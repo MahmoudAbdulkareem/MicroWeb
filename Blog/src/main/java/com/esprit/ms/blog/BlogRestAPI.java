@@ -14,7 +14,7 @@ public class BlogRestAPI {
     @Autowired
     private BlogService blogService;
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<Blog> addBlog(@RequestBody Blog blog) {
         try {
             Blog createdBlog = blogService.addBlog(blog);
@@ -41,6 +41,7 @@ public class BlogRestAPI {
         }
         return ResponseEntity.ok(blogs);
     }
+
 
     // Get blogs by category (using the Category enum)
     @GetMapping("/category/{category}")
