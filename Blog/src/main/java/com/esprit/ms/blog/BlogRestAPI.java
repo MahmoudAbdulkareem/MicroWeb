@@ -1,11 +1,10 @@
 package com.esprit.ms.blog;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/Blogs")
@@ -13,6 +12,9 @@ public class BlogRestAPI {
 
     @Autowired
     private BlogService blogService;
+
+    @Autowired
+    private TranslateService translateService;
 
     @PostMapping("/add")
     public ResponseEntity<Blog> addBlog(@RequestBody Blog blog) {
@@ -29,46 +31,40 @@ public class BlogRestAPI {
         try {
             return ResponseEntity.of(blogService.getBlogById(id));
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);  // 400 Bad Request
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<Blog>> getAllBlogs() {
-        List<Blog> blogs = blogService.getAllBlogs();
-        if (blogs.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(blogs);  // 204 No Content
-        }
+    public ResponseEntity<Page<Blog>> getAllBlogs(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) {
+        Page<Blog> blogs = blogService.getAllBlogs(page, size);
         return ResponseEntity.ok(blogs);
     }
 
-
-    // Get blogs by category (using the Category enum)
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<Blog>> getBlogsByCategory(@PathVariable Category category) {
-        List<Blog> blogs = blogService.getBlogsByCategory(category);
-        if (blogs.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(blogs);
-        }
+    public ResponseEntity<Page<Blog>> getBlogsByCategory(@PathVariable Category category,
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "5") int size) {
+        Page<Blog> blogs = blogService.getBlogsByCategory(category, page, size);
         return ResponseEntity.ok(blogs);
     }
 
-    // Search blogs by title
-    @GetMapping("/search")
-    public ResponseEntity<List<Blog>> searchBlogs(@RequestParam String keyword) {
-        List<Blog> blogs = blogService.searchBlogs(keyword);
-        if (blogs.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(blogs);
-        }
-        return ResponseEntity.ok(blogs);
+    @GetMapping("/search/{title}")
+    public ResponseEntity<Page<Blog>> searchBlogsByTitle(
+            @PathVariable String title,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        return ResponseEntity.ok(blogService.searchBlogs(title, page, size));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Blog> updateBlog(@PathVariable Long id, @RequestBody Blog updatedBlog) {
         try {
             return ResponseEntity.of(blogService.updateBlog(id, updatedBlog));
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);  // 400 Bad Request
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
@@ -77,7 +73,34 @@ public class BlogRestAPI {
         try {
             return ResponseEntity.ok(blogService.deleteBlog(id));
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid ID provided.");  // 400 Bad Request
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid ID provided.");
         }
     }
+    @GetMapping("/translate/{id}/{lang}")
+    public ResponseEntity<Blog> translateBlogContent(@PathVariable Long id, @PathVariable String lang) {
+        return blogService.getBlogById(id)
+                .map(blog -> {
+                    String translatedTitle = translateService.translateText(blog.getTitle(), "en", lang);
+                    String translatedContent = translateService.translateText(blog.getContent(), "en", lang);
+                    String translatedAuthor = translateService.translateText(blog.getAuthor(), "en", lang);
+                    String translatedCategory = translateService.translateText(blog.getCategory().name(), "en", lang);
+
+                    Blog translatedBlog = new Blog();
+                    translatedBlog.setId(blog.getId());
+                    translatedBlog.setTitle(translatedTitle);
+                    translatedBlog.setContent(translatedContent);
+                    translatedBlog.setAuthor(translatedAuthor);
+
+                    try {
+                        translatedBlog.setCategory(Category.valueOf(translatedCategory));
+                    } catch (IllegalArgumentException e) {
+                        translatedBlog.setCategory(blog.getCategory());
+                    }
+
+                    return ResponseEntity.ok(translatedBlog);
+                })
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    }
+
+
 }

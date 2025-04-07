@@ -12,10 +12,9 @@ public class Blog {
 
 	private String title;
 	private String content;
-	private String author; // Display name
-	private Long authorId; // ID of the author in UserService
+	private String author;
 
-	@Enumerated(EnumType.STRING) // Ensure category is stored as a string in the DB
+	@Enumerated(EnumType.STRING)
 	private Category category;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -23,15 +22,13 @@ public class Blog {
 
 	public Blog() {}
 
-	public Blog(String title, String content, String author, Category category, Long authorId) {
+	public Blog(String title, String content, String author, Category category) {
 		this.title = title;
 		this.content = content;
 		this.author = author;
 		this.category = category;
-		this.authorId = authorId;
 	}
 
-	// Getters and Setters
 	public Long getId() { return id; }
 	public void setId(Long id) { this.id = id; }
 	public String getTitle() { return title; }
@@ -43,6 +40,5 @@ public class Blog {
 	public Category getCategory() { return category; }
 	public void setCategory(Category category) { this.category = category; }
 	public Date getCreatedAt() { return createdAt; }
-	public Long getAuthorId() { return authorId; }
-	public void setAuthorId(Long authorId) { this.authorId = authorId; }
+
 }

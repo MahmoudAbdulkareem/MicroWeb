@@ -23,8 +23,9 @@ export class TutorialService {
 
   // Create a new tutorial
   create(data: any): Observable<any> {
-    return this.http.post(baseUrl, data);
+    return this.http.post(`${baseUrl}/add`, data);  // Updated URL to include "/add"
   }
+
 
   // Update an existing tutorial
   update(id: any, data: any): Observable<any> {
@@ -45,7 +46,7 @@ export class TutorialService {
   findByTitle(title: any): Observable<Tutorial[]> {
     return this.http.get<Tutorial[]>(`${baseUrl}?title=${title}`);
   }
-  
+
 
   findByCategory(category: string): Observable<Tutorial[]> {
     return this.http.get<Tutorial[]>(`${baseUrl}/category/${category}`);

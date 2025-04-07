@@ -47,15 +47,20 @@ export class TutorialsListComponent implements OnInit {
 
   // Filter tutorials by category or keyword
   filterTutorials(): void {
-    const filtered = this.tutorials?.filter(tutorial => {
-      const matchesCategory = this.selectedCategory ? tutorial.category === this.selectedCategory : true;
+    // First, filter based on the selected category and the search keyword
+    this.filteredTutorials = this.tutorials?.filter(tutorial => {
+      const matchesCategory = this.selectedCategory
+        ? tutorial.category === this.selectedCategory
+        : true;  // If no category is selected, show all tutorials
+
       const matchesKeyword = this.keyword
         ? (tutorial.title?.includes(this.keyword) || tutorial.content?.includes(this.keyword))
-        : true;
+        : true;  // Apply keyword filtering
+
       return matchesCategory && matchesKeyword;
-    });
-    this.filteredTutorials = filtered || [];
+    }) || [];
   }
+
 
   // Navigate to the Edit page when a tutorial is double-clicked
   navigateToEdit(tutorial: Tutorial): void {

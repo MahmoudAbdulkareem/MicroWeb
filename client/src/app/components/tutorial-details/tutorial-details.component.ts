@@ -55,6 +55,7 @@ export class TutorialDetailsComponent implements OnInit {
     });
   }
 
+
   deleteTutorial(): void {
     if (this.currentTutorial.id) {
       this.tutorialService.delete(this.currentTutorial.id).subscribe({
